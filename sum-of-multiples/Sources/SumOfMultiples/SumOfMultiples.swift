@@ -19,25 +19,30 @@
 class SumOfMultiples {
     class func toLimit(_ limit: Int, inMultiples multiples: [Int]) -> Int {
 
+        // If the limit is zero then do not continue
         if limit == 0 {
             return 0
         }
 
-        var numbers = [Int]()
+        // Remove any multiples that are zero so we're
+        // not dividing by zero
+        let multiplesExcludingZero = multiples.filter { $0 != 0 }
 
-        for multiple in multiples {
-            print("multiple: \(multiple)")
+        // Get a range of values up to but not including
+        // the limit
+        let rangeOfValues: Range = 1..<limit
 
-            if multiple != 0 {
-                for value in 1..<limit {
-                    if value % multiple == 0 {
-                        numbers.append(value)
-                    }
-                }
-            }
+        // For each multiple, create an array of integers containing
+        // the integers that are multiple of the given value,
+        // such as [[3, 6, 9, 12], [6, 12]]
+        var numbers = [Array<Int>]()
+        for multiple in multiplesExcludingZero {
+            numbers.append(rangeOfValues.filter { $0 % multiple == 0})
         }
 
-        let finalMultiples = Array(Set(numbers))
-        return finalMultiples.reduce(0, +)
+        // Flatten the resulting multi-dimensional array,
+        // remove duplicates,
+        // and generate the sum of all multiples.
+        return Set(numbers.flatMap { $0 }).reduce(0, +)
     }
 }
